@@ -1,9 +1,18 @@
 using firstApi;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var AllowedOrigins = "CorsPolicy";
+
+builder.Services.AddCors(o => o.AddPolicy(AllowedOrigins, build =>
+{
+    build.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+}));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -15,6 +24,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 
 var app = builder.Build();
 
+app.UseCors(AllowedOrigins);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
